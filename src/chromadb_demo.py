@@ -10,7 +10,10 @@ client = chromadb.Client()
 
 # A "collection" = a table in SQL terms
 # This is where your documents live
-collection = client.create_collection(name="ai_knowledge_base")
+collection = client.create_collection(
+    name="ai_knowledge_base",
+    metadata={"hnsw:space": "cosine"}
+)
 
 print("✅ ChromaDB client created")
 print("✅ Collection 'ai_knowledge_base' created\n")
@@ -90,7 +93,10 @@ print("📌 STEP 3: Search With Metadata Filtering")
 print("=" * 45)
 
 # Create a new collection with metadata
-collection_meta = client.create_collection(name="ai_knowledge_meta")
+collection_meta = client.create_collection(
+    name="ai_knowledge_meta",
+    metadata={"hnsw:space": "cosine"}
+)
 
 documents_with_meta = [
     {
@@ -157,7 +163,8 @@ persistent_client = chromadb.PersistentClient(path="./chroma_db")
 
 # Create or load existing collection
 persistent_collection = persistent_client.get_or_create_collection(
-    name="persistent_knowledge"
+    name="persistent_knowledge",
+    metadata={"hnsw:space": "cosine"}
 )
 
 persistent_collection.add(
