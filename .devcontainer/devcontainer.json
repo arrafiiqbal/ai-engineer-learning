@@ -1,0 +1,4 @@
+{
+  "name": "AI Engineer Learning",
+  "postCreateCommand": "pip install -r requirements.txt"
+}
