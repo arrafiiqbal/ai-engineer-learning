@@ -2,8 +2,8 @@
 
 > Senior Data Analyst → AI Engineer | 8-Week Sprint | by Iqbal Arrafiiqbal
 
-![Progress](https://img.shields.io/badge/Progress-5%2F8%20Weeks-a855f7)
-![Stack](https://img.shields.io/badge/Stack-Python%20%7C%20LangChain%20%7C%20ChromaDB%20%7C%20Groq-6366f1)
+![Progress](https://img.shields.io/badge/Progress-6%2F8%20Weeks-f59e0b)
+![Stack](https://img.shields.io/badge/Stack-Python%20%7C%20LangGraph%20%7C%20ChromaDB%20%7C%20Groq-6366f1)
 ![Environment](https://img.shields.io/badge/Environment-GitHub%20Codespaces-10b981)
 ![Model](https://img.shields.io/badge/LLM-Llama%203.1%20via%20Groq-f59e0b)
 
@@ -13,9 +13,9 @@
 
 This repository documents my structured self-study journey from **Senior Data Analyst to AI Engineer** — built in public, one week at a time.
 
-**Daily commitment:** 1–2 hours/day  
-**Device:** MacBook Air M1 + GitHub Codespaces  
-**Primary API:** Groq (Llama 3.1 8B) — free, fast, no credit card required  
+**Daily commitment:** 1–2 hours/day
+**Device:** MacBook Air M1 + GitHub Codespaces
+**Primary API:** Groq (Llama 3.1 8B) — free, fast, no credit card required
 **Tutor:** Claude (Anthropic) as AI engineering expert
 
 -----
@@ -29,8 +29,8 @@ This repository documents my structured self-study journey from **Senior Data An
 |3   |Embeddings & Vector Search |RAG Core  |✅ Complete|
 |4   |RAG App                    |RAG Core  |✅ Complete|
 |5   |LangChain Chains & Tools   |Agents    |✅ Complete|
-|6   |Build an AI Agent          |Agents    |🔜 Next    |
-|7   |FastAPI + Docker Deployment|Deploy    |⏳ Upcoming|
+|6   |AI Agent (LangGraph)       |Agents    |✅ Complete|
+|7   |FastAPI + Docker Deployment|Deploy    |🔜 Next    |
 |8   |Portfolio Polish & Launch  |Deploy    |⏳ Upcoming|
 
 -----
@@ -39,152 +39,82 @@ This repository documents my structured self-study journey from **Senior Data An
 
 ### ✅ Week 1 — Python & API Quickstart
 
-**Goal:** Get dev environment ready and make first LLM API call.
-
-**Key concepts:**
-
-- GitHub Codespaces as cloud dev environment
-- API keys via GitHub Secrets — never hardcoded in code
-- `async/await` with `asyncio.gather()` — 3 parallel LLM calls in 2s instead of 6s
-- LLM conversation memory — stateless API, history managed manually as a list
+First LLM API call via Groq (free, no credit card). Built a CLI chatbot with conversation history. `asyncio.gather()` made 3 parallel LLM calls run in 2s instead of 6s.
 
 **Key insight:** LLM memory is an illusion you create by sending the full conversation history on every API call.
 
-**Files:**
-
 ```
-src/test_groq.py       → First LLM API call via Groq
-src/async_demo.py      → sync vs async speed comparison
-src/async_groq.py      → 3 parallel LLM calls with asyncio.gather
-src/chatbot.py         → CLI chatbot with conversation history
+src/test_groq.py · src/async_demo.py · src/async_groq.py · src/chatbot.py
 ```
 
 -----
 
 ### ✅ Week 2 — Prompt Engineering
 
-**Goal:** Master structured prompting for reliable, production-quality LLM outputs.
+Compared zero-shot vs few-shot vs chain-of-thought. Built 5 reusable prompt templates with XML tags using Python dataclasses. Witnessed hallucination firsthand: chatbot confidently said “RAG = Red Amber Green.”
 
-**Key concepts:**
-
-- Zero-shot vs few-shot vs chain-of-thought — same model, different results
-- XML tags for structured output — `<task>`, `<context>`, `<instructions>`, `<input>`
-- System prompts — set persona before conversation starts
-- 5 reusable prompt templates using Python dataclasses
-
-**Key insight:** Prompt engineering changes output quality without changing the model. XML tags give format control; system prompts give persona control.
-
-**Real example:**
+**Key insight:** XML tags = format control. System prompts = persona control. Hallucination can only be fixed by RAG, not better prompting.
 
 ```
-Zero-shot  → "RAG = Red Amber Green" ❌ (hallucination)
-Few-shot   → NEUTRAL ✅ (learned from examples)
-Chain-of-thought → NEUTRAL ✅ (reasoned through it)
-```
-
-**Files:**
-
-```
-src/week2_prompting.py    → Zero-shot, few-shot, CoT, XML, system prompts
-src/prompt_templates.py   → 5 reusable prompt templates (dataclass)
-src/test_templates.py     → Test all 5 templates in parallel
+src/week2_prompting.py · src/prompt_templates.py · src/test_templates.py
 ```
 
 -----
 
 ### ✅ Week 3 — Embeddings & Vector Search
 
-**Goal:** Understand how semantic search works — the backbone of every RAG system.
-
-**Key concepts:**
-
-- Embeddings: text → 384 numbers where similar meaning = similar numbers
-- Cosine similarity: built from scratch with numpy (same as correlation in stats)
-- ChromaDB: production vector database — collection = SQL table, query() = SELECT ORDER BY similarity
-- Metadata filtering: SQL WHERE clause combined with semantic search
+Learned embeddings: text → 384 numbers where similar meaning = similar numbers. Built cosine similarity from scratch with numpy, then replaced it with ChromaDB — a production vector database with metadata filtering.
 
 **Key insight:** Semantic search finds relevant content even when zero words match — it operates on meaning, not keywords.
 
-**Real example:**
-
-```python
-# These sentences are 0.678 similar — different words, same meaning
-"I love working with data"
-"I enjoy analyzing datasets"
-
-# This is only 0.124 similar — completely unrelated
-"The weather is nice today"
 ```
-
-**Files:**
-
-```
-src/embeddings_demo.py    → Embeddings, cosine similarity, semantic search
-src/chromadb_demo.py      → Vector DB: index, search, metadata filter, persist
+src/embeddings_demo.py · src/chromadb_demo.py
 ```
 
 -----
 
 ### ✅ Week 4 — RAG App (Portfolio Project #1)
 
-**Goal:** Fix hallucination permanently. Build and deploy a live RAG chatbot.
+Connected retrieval + generation into a full RAG pipeline. Fixed the Week 2 hallucination permanently — “RAG = Retrieval Augmented Generation” with correct grounding. Shipped a live Streamlit chatbot with a sources panel.
 
-**Key concepts:**
-
-- RAG pipeline: index_documents() → retrieve() → generate()
-- Schema injection: ground LLM with real DB structure before asking it to query
-- Grounded prompting: `<context>` XML tag + “answer ONLY from context” instruction
-- Streamlit UI with sources panel — full transparency per answer
-
-**Key insight:** The model isn’t smarter with RAG — it just has the answer in front of it. It reads instead of guesses.
-
-**Before vs After RAG:**
+**Key insight:** The model isn’t smarter with RAG — it just has the answer in front of it instead of guessing.
 
 ```
-Without RAG → "RAG = Red Amber Green" ❌
-With RAG    → "RAG = Retrieval Augmented Generation" ✅
-
-Out of scope: "What is the capital of France?"
-Without RAG → "Paris" (hallucinated confidently)
-With RAG    → "I don't have information about that." ✅
-```
-
-**Files:**
-
-```
-src/rag_pipeline.py    → Full RAG pipeline: index → retrieve → generate
-src/app.py             → Streamlit RAG chatbot UI (Portfolio Project #1)
+src/rag_pipeline.py · src/app.py
 ```
 
 -----
 
 ### ✅ Week 5 — LangChain Chains & Tools
 
-**Goal:** Go beyond single prompts — build multi-step chains and give LLM tools.
+Learned LCEL (`prompt | llm | parser`) — pipe-based chaining, same concept as pandas method chaining. Built sequential chains, routing chains, and tool use with `@tool` + `bind_tools()`. Built a natural-language-to-SQL pipeline through 3 rounds of prompt iteration.
 
-**Key concepts:**
-
-- LCEL (LangChain Expression Language): `prompt | llm | parser` — pipe operator chains components
-- Sequential chains: output of Chain 1 feeds into Chain 2
-- Routing chains: classify question first → route to different chain
-- Tool use: `@tool` decorator + `llm.bind_tools()` — LLM autonomously decides which tool to call
-- SQL chain: natural language → SQL → execute → business insight (3 rounds of prompt iteration)
-
-**Key insight:** LLM generates SQL, Python executes it safely. Never let the LLM touch the database directly.
-
-**Prompt iteration in practice:**
+**Key insight:** LLM generates SQL, Python executes it safely — never let the LLM touch the database directly.
 
 ```
-Round 1 → 2/4 queries working  (missing JOIN rules)
-Round 2 → 3/4 queries working  (wrong SQL dialect: EXTRACT vs STRFTIME)
-Round 3 → 4/4 queries working  ✅
+src/week5_chains.py · src/sql_chain.py
 ```
 
-**Files:**
+-----
+
+### ✅ Week 6 — AI Agent (Portfolio Project #2)
+
+Built an autonomous LangGraph agent using the **ReAct pattern** (Thought → Action → Observation, looped). The agent wraps the Week 4 RAG tool and Week 5 SQL tool, and **autonomously decides** which to call — including calling both for compound questions. Added a Streamlit UI with full reasoning transparency, plus LangSmith tracing for observability.
+
+**Key insight:** Agents loop, chains don’t. Nodes + edges + state = a graph that can cycle until the LLM decides it has enough information.
+
+**Real example:**
 
 ```
-src/week5_chains.py    → LCEL: simple, sequential, routing, tool use chains
-src/sql_chain.py       → NL → SQL → execute → business insight pipeline
+Q: "Who's our top customer and what are embeddings?"
+→ Agent calls query_sales_database (gets: Acme Corp, $4,399.85)
+→ Agent calls search_knowledge_base (gets: embeddings definition)
+→ Agent synthesizes both into one coherent answer
+(Nobody told it to call both tools — it decided on its own)
+```
+
+```
+src/agent.py · src/agent_app.py
 ```
 
 -----
@@ -195,64 +125,56 @@ src/sql_chain.py       → NL → SQL → execute → business insight pipeline
 
 A chat interface that answers questions grounded in a custom knowledge base.
 
-**Features:**
-
-- Semantic search over indexed documents (ChromaDB)
-- Sources panel per answer — full transparency
-- Honest refusal for out-of-scope questions
-- Adjustable retrieval depth (1–5 documents)
+**Features:** Semantic search (ChromaDB) · Sources panel per answer · Honest refusal for out-of-scope questions · Adjustable retrieval depth
 
 **Stack:** ChromaDB · Groq API · Streamlit · SentenceTransformers · Python
 
 -----
 
-### Project 2: Data Analyst Agent 🔜 Week 6
+### Project 2: AI Data Analyst Agent ✅ Live
 
-An autonomous agent that takes a business question and decides for itself what to do.
+An autonomous agent that decides for itself whether to query data, search a knowledge base, or both.
 
-**Planned features:**
+**Features:** LangGraph ReAct loop · Multi-tool autonomous selection · Reasoning transparency panel · LangSmith tracing for full observability
 
-- Queries SQLite database autonomously
-- Searches RAG knowledge base when needed
-- Synthesizes multi-source insights
-- Returns grounded, actionable business recommendations
-
-**Stack:** LangGraph · LangChain · Groq API · SQLite · FastAPI · Streamlit
+**Stack:** LangGraph · LangChain · Groq API · SQLite · Streamlit · LangSmith
 
 -----
 
 ## 🧠 Key Insights Across All Weeks
 
-|# |Insight                                                                   |
-|--|--------------------------------------------------------------------------|
-|1 |LLM memory is an illusion — you manage conversation history yourself      |
-|2 |`asyncio.gather()` makes parallel LLM calls 3x faster than sequential     |
-|3 |Prompt engineering changes output quality without changing the model      |
-|4 |XML tags = format control. System prompts = persona control               |
-|5 |Hallucination = model guessing confidently. RAG is the only real cure     |
-|6 |Embeddings = GPS coordinates for meaning in 384-dimensional space         |
-|7 |ChromaDB collection ≈ SQL table. `query()` ≈ `SELECT ORDER BY similarity` |
-|8 |The model isn’t smarter with RAG — it just has the answer in front of it  |
-|9 |Honest refusal beats confident wrong answer every time                    |
-|10|LCEL pipes are to LangChain what method chaining is to pandas             |
-|11|LLM generates SQL, Python executes it. Never let LLM touch DB directly    |
-|12|Production prompts are never right first try. Observe → add rules → repeat|
+|# |Insight                                                                  |
+|--|-------------------------------------------------------------------------|
+|1 |LLM memory is an illusion — you manage conversation history yourself     |
+|2 |`asyncio.gather()` makes parallel LLM calls 3x faster than sequential    |
+|3 |Prompt engineering changes output quality without changing the model     |
+|4 |XML tags = format control. System prompts = persona control              |
+|5 |Hallucination = model guessing confidently. RAG is the only real cure    |
+|6 |Embeddings = GPS coordinates for meaning in 384-dimensional space        |
+|7 |ChromaDB collection ≈ SQL table. `query()` ≈ `SELECT ORDER BY similarity`|
+|8 |The model isn’t smarter with RAG — it just has the answer in front of it |
+|9 |LCEL pipes are to LangChain what method chaining is to pandas            |
+|10|LLM generates SQL, Python executes it. Never let LLM touch DB directly   |
+|11|Agents loop. Chains don’t. That’s the entire difference                  |
+|12|The agent decided which tools to use — nobody wrote the if/else logic    |
+|13|Reasoning transparency separates a toy agent from a trustworthy one      |
 
 -----
 
 ## 🛠️ Tech Stack
 
-|Category       |Tools                                  |
-|---------------|---------------------------------------|
-|Language       |Python 3.12                            |
-|LLM API        |Groq (Llama 3.1 8B Instant)            |
-|LLM Framework  |LangChain, LCEL                        |
-|Vector DB      |ChromaDB                               |
-|Embeddings     |SentenceTransformers (all-MiniLM-L6-v2)|
-|UI             |Streamlit                              |
-|Database       |SQLite                                 |
-|Environment    |GitHub Codespaces                      |
-|Version Control|Git + GitHub                           |
+|Category           |Tools                                  |
+|-------------------|---------------------------------------|
+|Language           |Python 3.12                            |
+|LLM API            |Groq (Llama 3.1 8B Instant)            |
+|LLM Framework      |LangChain, LCEL, LangGraph             |
+|Agent Observability|LangSmith                              |
+|Vector DB          |ChromaDB                               |
+|Embeddings         |SentenceTransformers (all-MiniLM-L6-v2)|
+|UI                 |Streamlit                              |
+|Database           |SQLite                                 |
+|Environment        |GitHub Codespaces                      |
+|Version Control    |Git + GitHub                           |
 
 -----
 
@@ -273,9 +195,11 @@ ai-engineer-learning/
 │   ├── embeddings_demo.py     # Week 3: embeddings + similarity
 │   ├── chromadb_demo.py       # Week 3: vector database
 │   ├── rag_pipeline.py        # Week 4: RAG pipeline
-│   ├── app.py                 # Week 4: Streamlit RAG app
+│   ├── app.py                 # Week 4: Streamlit RAG app (Portfolio #1)
 │   ├── week5_chains.py        # Week 5: LangChain LCEL chains
-│   └── sql_chain.py           # Week 5: NL to SQL pipeline
+│   ├── sql_chain.py           # Week 5: NL to SQL pipeline
+│   ├── agent.py                # Week 6: LangGraph agent (CLI)
+│   └── agent_app.py            # Week 6: Streamlit agent UI (Portfolio #2)
 ├── chroma_db/                 # Persisted vector database
 ├── sales.db                   # SQLite sales database
 ├── requirements.txt           # All dependencies pinned
@@ -299,6 +223,9 @@ export GROQ_API_KEY=your-key-here
 
 # 4. Run the RAG app
 streamlit run src/app.py
+
+# 5. Or run the AI agent
+streamlit run src/agent_app.py
 ```
 
 Get a free Groq API key at [console.groq.com](https://console.groq.com) — no credit card required.
