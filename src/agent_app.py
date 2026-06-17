@@ -1,4 +1,7 @@
 import os
+os.environ["LANGCHAIN_TRACING_V2"] = "true"
+os.environ["LANGCHAIN_PROJECT"] = "ai-data-analyst-agent"
+
 import sqlite3
 import pandas as pd
 import streamlit as st
@@ -10,6 +13,7 @@ from langchain_core.tools import tool
 from langchain_core.messages import HumanMessage, SystemMessage, ToolMessage, AIMessage
 from langgraph.graph import StateGraph, END
 from langgraph.graph.message import add_messages
+
 
 # ── Page Config ──────────────────────────────────────────────
 st.set_page_config(
