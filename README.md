@@ -1,7 +1,7 @@
 # 🤖 AI Engineering Learning Journey
-> Senior Data Analyst → AI Engineer | 8-Week Sprint | by Iqbal Arrafiiqbal
+> Senior Data Analyst exploring AI Engineering | Self-Study Sprint | by Iqbal Arrafiiqbal
 
-![Progress](https://img.shields.io/badge/Progress-8%2F8%20Weeks-10b981)
+![Progress](https://img.shields.io/badge/Status-Complete-10b981)
 ![Stack](https://img.shields.io/badge/Stack-Python%20%7C%20LangGraph%20%7C%20FastAPI%20%7C%20Docker-6366f1)
 ![Deployment](https://img.shields.io/badge/Deployed-Railway-10b981)
 ![Model](https://img.shields.io/badge/LLM-Llama%203.1%20via%20Groq-f59e0b)
@@ -13,20 +13,20 @@ No setup needed — interactive Swagger UI, works from any browser including mob
 
 ## 📋 About This Repo
 
-This repository documents my structured self-study journey from **Senior Data Analyst to AI Engineer** — built in public, one week at a time.
+A self-study sprint into AI Engineering, built from a Senior Data Analyst background — done purely for learning, not as an active job search. Originally scoped as an 8-week, 1–2 hr/day plan, but completed in **roughly 4 focused working sessions** since the material moved faster than planned. Documenting it here mostly as a personal reference and a way to retain what was learned.
 
-**Daily commitment:** 1–2 hours/day
+**Actual time to complete:** ~4 working sessions (originally scoped for 8 weeks)
 **Device:** MacBook Air M1 + GitHub Codespaces
 **Primary API:** Groq (Llama 3.1 8B) — free, fast, no credit card required
 **Deployed on:** Railway
-**Tutor:** Claude (Anthropic) as AI engineering expert
+**Tutor:** Claude (Anthropic) as AI engineering study partner
 
 ---
 
-## 🗺️ 8-Week Roadmap
+## 🗺️ Topics Covered
 
-| Week | Topic | Phase | Status |
-|------|-------|-------|--------|
+| Module | Topic | Phase | Status |
+|--------|-------|-------|--------|
 | 1 | Python & API Quickstart | Foundation | ✅ Complete |
 | 2 | Prompt Engineering | Foundation | ✅ Complete |
 | 3 | Embeddings & Vector Search | RAG Core | ✅ Complete |
@@ -34,7 +34,7 @@ This repository documents my structured self-study journey from **Senior Data An
 | 5 | LangChain Chains & Tools | Agents | ✅ Complete |
 | 6 | AI Agent (LangGraph) | Agents | ✅ Complete |
 | 7 | FastAPI + Docker Deployment | Deploy | ✅ Complete |
-| 8 | Portfolio Polish & Launch | Deploy | ✅ Complete |
+| 8 | Documentation & Wrap-up | Deploy | ✅ Complete |
 
 ---
 
@@ -59,7 +59,7 @@ This repository documents my structured self-study journey from **Senior Data An
 
 ## 📚 What I've Learned
 
-### ✅ Week 1 — Python & API Quickstart
+### ✅ Module 1 — Python & API Quickstart
 First LLM API call via Groq. Built a CLI chatbot with conversation history. `asyncio.gather()` made 3 parallel LLM calls run in 2s instead of 6s.
 
 **Key insight:** LLM memory is an illusion — you manage the full conversation history yourself.
@@ -70,7 +70,7 @@ src/test_groq.py · src/async_demo.py · src/async_groq.py · src/chatbot.py
 
 ---
 
-### ✅ Week 2 — Prompt Engineering
+### ✅ Module 2 — Prompt Engineering
 Compared zero-shot vs few-shot vs chain-of-thought. Built 5 reusable prompt templates with XML tags. Watched the chatbot confidently hallucinate "RAG = Red Amber Green."
 
 **Key insight:** Hallucination is the model guessing confidently — no prompt trick fixes missing knowledge.
@@ -81,7 +81,7 @@ src/week2_prompting.py · src/prompt_templates.py · src/test_templates.py
 
 ---
 
-### ✅ Week 3 — Embeddings & Vector Search
+### ✅ Module 3 — Embeddings & Vector Search
 Text → 384 numbers, similar meaning = similar numbers. Built cosine similarity from scratch, then ChromaDB for production vector search with metadata filtering.
 
 **Key insight:** Semantic search finds relevant content even when zero words match.
@@ -92,8 +92,8 @@ src/embeddings_demo.py · src/chromadb_demo.py
 
 ---
 
-### ✅ Week 4 — RAG App (Portfolio Project #1)
-Connected retrieval + generation into a full RAG pipeline. Fixed the Week 2 hallucination permanently. Shipped a live Streamlit chatbot with a sources panel.
+### ✅ Module 4 — RAG App
+Connected retrieval + generation into a full RAG pipeline. Fixed the Module 2 hallucination permanently. Shipped a live Streamlit chatbot with a sources panel.
 
 **Key insight:** The model isn't smarter with RAG — it just has the answer in front of it instead of guessing.
 
@@ -103,7 +103,7 @@ src/rag_pipeline.py · src/app.py
 
 ---
 
-### ✅ Week 5 — LangChain Chains & Tools
+### ✅ Module 5 — LangChain Chains & Tools
 LCEL (`prompt | llm | parser`) — pipe chaining like pandas. Sequential chains, routing chains, tool use. Natural-language-to-SQL pipeline through 3 rounds of prompt iteration.
 
 **Key insight:** LLM generates SQL, Python executes it safely — never let the LLM touch the database directly.
@@ -114,7 +114,7 @@ src/week5_chains.py · src/sql_chain.py
 
 ---
 
-### ✅ Week 6 — AI Agent (Portfolio Project #2)
+### ✅ Module 6 — AI Agent
 Built an autonomous LangGraph agent using the ReAct pattern. The agent wraps the RAG tool and SQL tool and **decides on its own** which to call. Added reasoning transparency UI + LangSmith tracing.
 
 **Key insight:** Agents loop, chains don't. The agent decided which tools to use — nobody wrote the if/else logic.
@@ -125,9 +125,9 @@ src/agent.py · src/agent_app.py
 
 ---
 
-### ✅ Week 7 — FastAPI + Docker Deployment
+### ✅ Module 7 — FastAPI + Docker Deployment
 
-Wrapped the Week 6 agent in a production FastAPI service and deployed it live on Railway. This week involved real debugging — not just following steps.
+Wrapped the Module 6 agent in a production FastAPI service and deployed it live on Railway. This week involved real debugging — not just following steps.
 
 **Bugs found and fixed (via LangSmith trace analysis):**
 
@@ -150,22 +150,21 @@ src/main.py · Dockerfile · .dockerignore
 
 ---
 
-### ✅ Week 8 — Portfolio Polish & Launch
+### ✅ Module 8 — Documentation & Wrap-up
 
-Final week — turning 7 weeks of technical work into a presentable, discoverable portfolio.
+Final step — consolidating everything into a clear, well-documented record for future reference.
 
-- Added live demo link prominently at the top of this README
-- Documented the full debugging journey as a technical narrative, not just a feature list
-- Polished project descriptions to lead with outcomes and real problems solved
-- Prepared for LinkedIn announcement and continued iteration
+- Added a live demo link to this README
+- Documented the full debugging journey as a technical narrative
+- Reviewed the whole sprint end to end
 
-**Key insight:** A strong project poorly presented gets scrolled past. The same project with a live demo link and a clear "here's the problem I solved" story gets read.
+**Key insight:** Writing things down clearly, even just for yourself, makes the knowledge stick — and makes it much easier to pick back up months from now.
 
 ---
 
-## 🚀 Portfolio Projects
+## 🛠️ Projects Built
 
-### Project 1: RAG Knowledge Assistant ✅ Live
+### 1. RAG Knowledge Assistant
 A chat interface that answers questions grounded in a custom knowledge base.
 
 **Features:** Semantic search (ChromaDB) · Sources panel per answer · Honest refusal for out-of-scope questions
@@ -174,7 +173,7 @@ A chat interface that answers questions grounded in a custom knowledge base.
 
 ---
 
-### Project 2: AI Data Analyst Agent ✅ Live
+### 2. AI Data Analyst Agent
 An autonomous agent that decides for itself whether to query data, search a knowledge base, or both.
 
 **Features:** LangGraph ReAct loop · Multi-tool autonomous selection · Reasoning transparency panel · LangSmith tracing
@@ -183,18 +182,18 @@ An autonomous agent that decides for itself whether to query data, search a know
 
 ---
 
-### Project 3: Production-Deployed Agent API ✅ Live
+### 3. Deployed Agent API
 **[Try it now →](https://ai-engineer-learning-production.up.railway.app/docs)**
 
 The agent above, hardened against 4 real reliability bugs and deployed as a public REST API.
 
-**Features:** FastAPI endpoints with auto-generated docs · Dockerized · Deployed on Railway · Grounded fallback logic preventing hallucination · Tested across devices including mobile/tablet browsers
+**Features:** FastAPI endpoints with auto-generated docs · Dockerized · Deployed on Railway · Grounded fallback logic preventing hallucination
 
 **Stack:** FastAPI · Docker · Railway · LangGraph · Groq API
 
 ---
 
-## 🧠 Key Insights Across All Weeks
+## 🧠 Key Insights Across All Modules
 
 | # | Insight |
 |---|---------|
@@ -212,7 +211,6 @@ The agent above, hardened against 4 real reliability bugs and deployed as a publ
 | 12 | Disk space errors during Docker build can be a real infra limit, not a config bug |
 | 13 | CI/CD platforms build with proper resources — don't fight your dev machine |
 | 14 | A truly deployed API works from any device with a browser, even an iPad |
-| 15 | A strong project poorly presented gets scrolled past — packaging matters |
 
 ---
 
@@ -253,12 +251,12 @@ ai-engineer-learning/
 │   ├── embeddings_demo.py     # Week 3: embeddings + similarity
 │   ├── chromadb_demo.py       # Week 3: vector database
 │   ├── rag_pipeline.py        # Week 4: RAG pipeline
-│   ├── app.py                 # Week 4: Streamlit RAG app (Portfolio #1)
+│   ├── app.py                 # Week 4: Streamlit RAG app
 │   ├── week5_chains.py        # Week 5: LangChain LCEL chains
 │   ├── sql_chain.py           # Week 5: NL to SQL pipeline
 │   ├── agent.py                # Week 6: LangGraph agent (CLI)
-│   ├── agent_app.py            # Week 6: Streamlit agent UI (Portfolio #2)
-│   └── main.py                 # Week 7: FastAPI production service (Portfolio #3)
+│   ├── agent_app.py            # Week 6: Streamlit agent UI
+│   └── main.py                 # Week 7: FastAPI production service
 ├── chroma_db/                  # Persisted vector database
 ├── sales.db                    # SQLite sales database
 ├── Dockerfile                  # Container definition
@@ -298,7 +296,7 @@ Get a free Groq API key at [console.groq.com](https://console.groq.com) — no c
 
 ## 🎓 What's Next
 
-This 8-week sprint is complete, but the learning continues:
+This sprint is complete — finished in about 4 working sessions rather than the originally planned 8 weeks. Possible directions to keep exploring, no fixed timeline:
 - Multi-agent orchestration (CrewAI)
 - Production observability dashboards
 - Expanding the knowledge base with real-world documents
@@ -306,4 +304,4 @@ This 8-week sprint is complete, but the learning continues:
 
 ---
 
-*Built over 8 weeks, one focused session at a time. Open to AI Engineering opportunities. 🚀*
+*A self-study record, kept mostly for personal reference.*
