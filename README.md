@@ -1,10 +1,13 @@
 # 🤖 AI Engineering Learning Journey
 > Senior Data Analyst → AI Engineer | 8-Week Sprint | by Iqbal Arrafiiqbal
 
-![Progress](https://img.shields.io/badge/Progress-7%2F8%20Weeks-f59e0b)
+![Progress](https://img.shields.io/badge/Progress-8%2F8%20Weeks-10b981)
 ![Stack](https://img.shields.io/badge/Stack-Python%20%7C%20LangGraph%20%7C%20FastAPI%20%7C%20Docker-6366f1)
 ![Deployment](https://img.shields.io/badge/Deployed-Railway-10b981)
 ![Model](https://img.shields.io/badge/LLM-Llama%203.1%20via%20Groq-f59e0b)
+
+### 🔗 [**Try the Live Agent API →**](https://ai-engineer-learning-production.up.railway.app/docs)
+No setup needed — interactive Swagger UI, works from any browser including mobile.
 
 ---
 
@@ -31,7 +34,26 @@ This repository documents my structured self-study journey from **Senior Data An
 | 5 | LangChain Chains & Tools | Agents | ✅ Complete |
 | 6 | AI Agent (LangGraph) | Agents | ✅ Complete |
 | 7 | FastAPI + Docker Deployment | Deploy | ✅ Complete |
-| 8 | Portfolio Polish & Launch | Deploy | 🔜 Next |
+| 8 | Portfolio Polish & Launch | Deploy | ✅ Complete |
+
+---
+
+## 🚀 Try It Yourself
+
+**Live API:** [ai-engineer-learning-production.up.railway.app/docs](https://ai-engineer-learning-production.up.railway.app/docs)
+
+1. Click **POST /ask**
+2. Click **"Try it out"**
+3. Enter a question:
+   ```json
+   {"question": "What is RAG?"}
+   ```
+4. Click **"Execute"**
+
+**Try asking it:**
+- `"What is RAG?"` → pulls from the AI knowledge base
+- `"What's our total revenue by category?"` → queries the live SQL database
+- `"Who's our top customer and what are embeddings?"` → autonomously uses both tools
 
 ---
 
@@ -118,13 +140,26 @@ Wrapped the Week 6 agent in a production FastAPI service and deployed it live on
 
 **Key insight:** Never trust the LLM alone to terminate a loop — always add a deterministic, code-enforced safety net. And apply the same RAG-style grounding pattern to every fallback path, not just the main pipeline.
 
-**Infrastructure lesson:** Local Docker builds repeatedly failed with `no space left on device` — not a Dockerfile bug, but a genuine constraint of building a PyTorch + ML stack inside a 32GB Codespace overlay filesystem. The fix wasn't more optimization — it was recognizing the build should happen on Railway's infrastructure instead, which has the resources designed for this.
+**Infrastructure lesson:** Local Docker builds repeatedly failed with `no space left on device` — not a Dockerfile bug, but a genuine constraint of building a PyTorch + ML stack inside a 32GB Codespace overlay filesystem. The fix wasn't more optimization — it was recognizing the build should happen on Railway's infrastructure instead.
 
-**Deployment result:** Live public REST API at a Railway-generated domain, with auto-generated `/docs` (Swagger UI) — verified working by testing directly from iPad Safari with zero terminal access needed.
+**Deployment result:** Live public REST API with auto-generated `/docs` (Swagger UI) — verified working by testing directly from iPad Safari with zero terminal access needed.
 
 ```
 src/main.py · Dockerfile · .dockerignore
 ```
+
+---
+
+### ✅ Week 8 — Portfolio Polish & Launch
+
+Final week — turning 7 weeks of technical work into a presentable, discoverable portfolio.
+
+- Added live demo link prominently at the top of this README
+- Documented the full debugging journey as a technical narrative, not just a feature list
+- Polished project descriptions to lead with outcomes and real problems solved
+- Prepared for LinkedIn announcement and continued iteration
+
+**Key insight:** A strong project poorly presented gets scrolled past. The same project with a live demo link and a clear "here's the problem I solved" story gets read.
 
 ---
 
@@ -149,6 +184,8 @@ An autonomous agent that decides for itself whether to query data, search a know
 ---
 
 ### Project 3: Production-Deployed Agent API ✅ Live
+**[Try it now →](https://ai-engineer-learning-production.up.railway.app/docs)**
+
 The agent above, hardened against 4 real reliability bugs and deployed as a public REST API.
 
 **Features:** FastAPI endpoints with auto-generated docs · Dockerized · Deployed on Railway · Grounded fallback logic preventing hallucination · Tested across devices including mobile/tablet browsers
@@ -175,6 +212,7 @@ The agent above, hardened against 4 real reliability bugs and deployed as a publ
 | 12 | Disk space errors during Docker build can be a real infra limit, not a config bug |
 | 13 | CI/CD platforms build with proper resources — don't fight your dev machine |
 | 14 | A truly deployed API works from any device with a browser, even an iPad |
+| 15 | A strong project poorly presented gets scrolled past — packaging matters |
 
 ---
 
@@ -252,10 +290,20 @@ streamlit run src/app.py        # RAG app
 streamlit run src/agent_app.py  # Agent app
 ```
 
-**Try the live deployed API:** visit `/docs` on the Railway URL for an interactive Swagger UI — no setup required, works from any browser.
+**Or just try the live deployed version:** [ai-engineer-learning-production.up.railway.app/docs](https://ai-engineer-learning-production.up.railway.app/docs) — no setup required.
 
 Get a free Groq API key at [console.groq.com](https://console.groq.com) — no credit card required.
 
 ---
 
-*Updated after every learning session. Follow along as I build toward AI Engineering. 🚀*
+## 🎓 What's Next
+
+This 8-week sprint is complete, but the learning continues:
+- Multi-agent orchestration (CrewAI)
+- Production observability dashboards
+- Expanding the knowledge base with real-world documents
+- Cost optimization for LLM API usage at scale
+
+---
+
+*Built over 8 weeks, one focused session at a time. Open to AI Engineering opportunities. 🚀*
