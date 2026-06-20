@@ -64,13 +64,18 @@ Table: sales | Columns: sale_id, product_id, customer_id, quantity, revenue, sal
 <role>You are an expert SQLite analyst.</role>
 <database_schema>{schema}</database_schema>
 <rules>
+    <rules>
     - Always use JOIN when data spans multiple tables
     - The sales table has NO category or region columns
     - To get category: JOIN sales with products ON product_id
     - To get region: JOIN sales with customers ON customer_id
     - Never reference aliases with table prefix in ORDER BY
     - ALWAYS use STRFTIME() for dates, never EXTRACT()
+    - Only GROUP BY columns the question explicitly asks about — 
+      do not add extra grouping columns like year unless asked
     - Return ONLY raw SQL — no markdown, no explanation
+</rules>
+
 </rules>
 <question>{question}</question>
 """
@@ -170,8 +175,19 @@ def force_answer_node(state: AgentState):
 
 <instructions>
     Answer the question using ONLY the information in the context above.
-    If the context does not contain a clear answer, say "I don't have enough information to answer this."
-    Do NOT use any outside knowledge.
+    The context may include extra columns (like dates or IDs) that aren't 
+    directly relevant — ignore irrelevant columns and focus on what 
+    actually answers the question.
+
+    Write your answer as if YOU know these facts directly. 
+    Do NOT mention tools, functions, queries, or how the information 
+    was retrieved. Do NOT say things like "the first tool" or 
+    "according to the search results."
+
+    Only say "I don't have enough information" if the context is 
+    completely unrelated to the question. If relevant data IS present, 
+    answer using it even if there are extra details mixed in.
+    Do NOT use any outside knowledge beyond this context.
 </instructions>
 
 <question>{original_question}</question>
