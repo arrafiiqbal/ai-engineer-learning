@@ -122,11 +122,23 @@ STRICT RULES:
 4. NEVER connect or mix information between the two tools unless the question explicitly asks for both.
 5. Call each tool AT MOST ONCE.
 6. As soon as you have a relevant tool result, answer immediately. Do not call more tools.
-7. NEVER invent a relationship between sales data and AI concepts unless the user explicitly asks about that relationship.""")
+7. NEVER invent a relationship between sales data and AI concepts unless the user explicitly asks about that relationship.
+8. If the question is vague, general, conversational, or about your own capabilities (e.g. "what can you do?", "what can you offer?", "hello", "help"), DO NOT call any tool. Answer directly: explain that you can answer questions about sales data (revenue, customers, products, regions) and AI/ML concepts (like RAG and embeddings).""")
 
     messages = [system_msg] + state["messages"]
-    response = llm_with_tools.invoke(messages)
-    return {"messages": [response]}
+
+    try:
+        response = llm_with_tools.invoke(messages)
+        return {"messages": [response]}
+    except Exception:
+        # Model emitted a malformed tool call — fall back to a safe direct reply
+        fallback = AIMessage(content=(
+            "I can help with two things: questions about our sales data "
+            "(revenue, customers, products, regions) and questions about "
+            "AI/ML concepts (like RAG or embeddings). What would you like to know?"
+        ))
+        return {"messages": [fallback]}
+
 
 
 
