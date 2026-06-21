@@ -3,11 +3,36 @@
 
 ![Progress](https://img.shields.io/badge/Status-Complete-10b981)
 ![Stack](https://img.shields.io/badge/Stack-Python%20%7C%20LangGraph%20%7C%20FastAPI%20%7C%20Docker-6366f1)
-![Deployment](https://img.shields.io/badge/Deployed-Railway-10b981)
+![Frontend](https://img.shields.io/badge/Frontend-Streamlit%20Cloud-ff4b4b)
+![Backend](https://img.shields.io/badge/Backend-Railway-10b981)
 ![Model](https://img.shields.io/badge/LLM-Llama%203.1%20via%20Groq-f59e0b)
 
-### 🔗 [**Try the Live Agent API →**](https://ai-engineer-learning-production.up.railway.app/docs)
-No setup needed — interactive Swagger UI, works from any browser including mobile.
+### 🔗 Live Demo
+
+- **💬 Chat UI:** [ai-engineer-learning…streamlit.app](https://ai-engineer-learning-73uyrb4ksxcttwsdma6dzm.streamlit.app) — friendly chat interface, just type and ask
+- **⚙️ API docs:** [ai-engineer-learning-production…/docs](https://ai-engineer-learning-production.up.railway.app/docs) — interactive Swagger UI for the raw API
+
+## 🏗️ Architecture
+
+The frontend and backend are deployed independently as separate services that communicate over HTTP — mirroring how production systems are typically structured.
+
+```
+┌──────────────────────┐         ┌───────────────────────────┐
+│  Streamlit Chat UI   │  HTTP   │   FastAPI Backend          │
+│  (Streamlit Cloud)   │ ──────▶ │   (Railway)                │
+│                      │  POST   │                            │
+│  • streamlit         │  /ask   │   • LangGraph agent        │
+│  • requests          │ ◀────── │   • ChromaDB (RAG)         │
+│  only — no ML deps   │  JSON   │   • SQLite (SQL tool)      │
+└──────────────────────┘         │   • Groq LLM               │
+                                  └───────────────────────────┘
+```
+
+**Why decoupled?**
+- **Independent scaling** — UI and agent scale separately
+- **Lightweight frontend** — installs only `streamlit` + `requests`, deploys in seconds
+- **Heavy backend isolated** — the PyTorch/ML stack stays containerized on Railway
+- **Realistic structure** — how frontend/backend are split in real production systems
 
 ---
 
@@ -240,28 +265,32 @@ The agent above, hardened against 4 real reliability bugs and deployed as a publ
 ai-engineer-learning/
 ├── .devcontainer/
 │   └── devcontainer.json      # Auto-installs packages on Codespace start
-├── src/
-│   ├── test_groq.py           # Week 1: First LLM API call
-│   ├── async_demo.py          # Week 1: sync vs async comparison
-│   ├── async_groq.py          # Week 1: parallel LLM calls
-│   ├── chatbot.py             # Week 1: CLI chatbot with memory
-│   ├── week2_prompting.py     # Week 2: prompting techniques
-│   ├── prompt_templates.py    # Week 2: reusable template library
-│   ├── test_templates.py      # Week 2: template tests
-│   ├── embeddings_demo.py     # Week 3: embeddings + similarity
-│   ├── chromadb_demo.py       # Week 3: vector database
-│   ├── rag_pipeline.py        # Week 4: RAG pipeline
-│   ├── app.py                 # Week 4: Streamlit RAG app
-│   ├── week5_chains.py        # Week 5: LangChain LCEL chains
-│   ├── sql_chain.py           # Week 5: NL to SQL pipeline
-│   ├── agent.py                # Week 6: LangGraph agent (CLI)
-│   ├── agent_app.py            # Week 6: Streamlit agent UI
-│   └── main.py                 # Week 7: FastAPI production service
+├── src/                        # Backend — runs on Railway
+│   ├── test_groq.py           # Module 1: First LLM API call
+│   ├── async_demo.py          # Module 1: sync vs async comparison
+│   ├── async_groq.py          # Module 1: parallel LLM calls
+│   ├── chatbot.py             # Module 1: CLI chatbot with memory
+│   ├── week2_prompting.py     # Module 2: prompting techniques
+│   ├── prompt_templates.py    # Module 2: reusable template library
+│   ├── test_templates.py      # Module 2: template tests
+│   ├── embeddings_demo.py     # Module 3: embeddings + similarity
+│   ├── chromadb_demo.py       # Module 3: vector database
+│   ├── rag_pipeline.py        # Module 4: RAG pipeline
+│   ├── app.py                 # Module 4: Streamlit RAG app (local)
+│   ├── week5_chains.py        # Module 5: LangChain LCEL chains
+│   ├── sql_chain.py           # Module 5: NL to SQL pipeline
+│   ├── agent.py                # Module 6: LangGraph agent (CLI)
+│   ├── agent_app.py            # Module 6: Streamlit agent UI (local)
+│   └── main.py                 # Module 7: FastAPI production service
+├── frontend/                   # Frontend — runs on Streamlit Cloud
+│   ├── streamlit_ui.py        # Lightweight chat UI (calls Railway API)
+│   ├── requirements.txt       # Just streamlit + requests
+│   └── README.md              # Frontend architecture notes
 ├── chroma_db/                  # Persisted vector database
 ├── sales.db                    # SQLite sales database
-├── Dockerfile                  # Container definition
+├── Dockerfile                  # Container definition (backend)
 ├── .dockerignore                # Excludes unnecessary files from image
-├── requirements.txt            # All dependencies pinned
+├── requirements.txt            # Backend dependencies (heavy ML stack)
 └── README.md                   # This file
 ```
 
