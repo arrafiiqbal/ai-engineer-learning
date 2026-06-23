@@ -187,6 +187,53 @@ Final step — consolidating everything into a clear, well-documented record for
 
 ---
 
+## 🧪 Beyond the Sprint — Multi-Agent Systems
+
+After completing the core sprint, I explored multi-agent orchestration — moving from one agent that does everything to a *team* of specialist agents that coordinate.
+
+**The path here was itself a lesson.** I first tried CrewAI, but hit a confirmed upstream bug ([crewAI#5886](https://github.com/crewAIInc/crewAI/issues/5886)) where `cache_breakpoint` is injected into messages for non-Anthropic providers, which Groq rejects. After weighing it, I switched to **LangGraph** — more production-grade, already familiar from Module 6, and works cleanly with Groq.
+
+**What I built:** a supervisor-pattern multi-agent system with three specialists:
+
+```
+            START
+              ↓
+        ┌─supervisor◀─────────┐
+        │     │               │
+   route_decision             │
+        │     │               │
+   ┌────┼─────┼────┐          │
+   ▼    ▼     ▼    ▼          │
+researcher explainer writer  END
+   │       │       │
+   └───────┴───────┴──────────┘
+        (all loop back to supervisor)
+```
+
+| Agent | Role | Tool | Model |
+|-------|------|------|-------|
+| Researcher | Queries the sales database | SQL generation | Llama 3.1 8B |
+| Explainer | Explains AI/ML concepts | Knowledge base (RAG) | Llama 3.1 8B |
+| Writer | Synthesizes a final answer | none | Llama 3.1 8B |
+| Supervisor | Routes between specialists | none | Llama 3.3 70B |
+
+**The key bug — and the key lesson:** My first supervisor used the LLM to decide routing on every loop. It got stuck re-routing to the same agent indefinitely, hitting the recursion limit. The fix wasn't a better prompt or bigger model — it was recognizing that **routing logic is deterministic and belongs in code**. I now use the LLM only once, to classify what a question *needs* (data? concept?), then plain Python routes deterministically based on what's been collected.
+
+**Result:** clean, adaptive routing. Compound questions use all three specialists; concept-only questions skip the researcher entirely.
+
+```
+"Top revenue category AND what are embeddings?"  → researcher → explainer → writer
+"What is RAG?"                                    → explainer → writer (researcher skipped)
+```
+
+**Key insight:** Use the LLM for judgment (what does this question need?), use code for control flow (which agent runs next). Never let the LLM alone control loop termination — the same principle that fixed the agent looping back in Module 7.
+
+```
+src/multi_agent.py
+```
+
+---
+
 ## 🛠️ Projects Built
 
 ### 1. RAG Knowledge Assistant
@@ -325,10 +372,11 @@ Get a free Groq API key at [console.groq.com](https://console.groq.com) — no c
 
 ## 🎓 What's Next
 
-This sprint is complete — finished in about 4 working sessions rather than the originally planned 8 weeks. Possible directions to keep exploring, no fixed timeline:
-- Multi-agent orchestration (CrewAI)
+The core sprint is complete (finished in about 4 working sessions), and I've since added a multi-agent system on top. Possible directions to keep exploring, no fixed timeline:
+- ✅ ~~Multi-agent orchestration~~ — done with LangGraph (see "Beyond the Sprint" above)
+- Wrap the multi-agent system in a FastAPI endpoint, like Module 7
+- Add a 4th specialist (e.g. a "critic" that reviews answers before finalizing)
 - Production observability dashboards
-- Expanding the knowledge base with real-world documents
 - Cost optimization for LLM API usage at scale
 
 ---
